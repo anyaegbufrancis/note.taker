@@ -1,0 +1,33 @@
+{
+  "name": "note-taker",
+  "version": "1.0.0",
+  "description": "Note Taker App",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm run test",
+    "start": "node app.js",
+    "watch": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anyaegbufrancis/note.taker.git"
+  },
+  "keywords": [
+    "note",
+    "taker",
+    "express",
+    "require"
+  ],
+  "author": "Francis Anyaegbu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anyaegbufrancis/note.taker/issues"
+  },
+  "homepage": "https://github.com/anyaegbufrancis/note.taker#readme",
+  "dependencies": {
+    "ajax": "0.0.4",
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "require": "^2.4.20"
+  }
+}
