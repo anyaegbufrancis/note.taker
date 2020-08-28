@@ -6,11 +6,12 @@ const noteURL = "/api/notes"
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const uuid = require("uuid-random")
+const { env } = require("process");
+const color = require("color")
 
 //db.json file path & fs
 const database = require("./db/db.json")
-const { env } = require("process");
-//const { getJSON } = require("jquery");
 
 
 // Sets up the Express App
@@ -37,41 +38,53 @@ notetaker.get(noteURL, (req, res) => {
 
 //Read user title input and note text, push the new input into existing DB JSON 
 notetaker.post(noteURL, (req, res) => {
+    
+  //Inject UUID to received title and text body object using spread operator  
+  const requestID = {id: uuid()}; 
+  let noteAdd =  {...(req.body), ...requestID} 
   
-  //Declare variable to receive input object
-  let noteAdd = req.body;
-  console.log(noteAdd)
   
   //Read Existing object array from JSON DB and push received input into this
-  fs.readFile("db/db.json", (err, response) => {
+  fs.readFile("./db/db.json", (err, response) => {
     if (err) throw err;
-    const existingJSONDB = JSON.parse(response);
-    console.log(existingJSONDB)    
-    existingJSONDB.push(noteAdd)
+    const existingJSONDB = JSON.parse(response); 
+    existingJSONDB.push(noteAdd)    
+    //console.log(existingJSONDB)  
     
-    //Write the updated Database back to JSOn DB database to replace the last record
-    fs.writeFile("db/db.json", JSON.stringify(existingJSONDB), (err) => {
-      if (err)
-      console.log(err);
+    //Write the updated Database back to JSON DB database to replace the last record
+    fs.writeFile("./db/db.json", JSON.stringify(existingJSONDB, null, 1), (err) => {
+      if (err) throw err;
       else {
         console.log("\nNOTES DATABASE SUCCESSFULLY UPDATED...\n");
       };
       });
-    res.json(existingJSONDB);
+    res.json(existingJSONDB);    
     });
   });
 
-//Delete Action
-notetaker.delete("/api/notes/:id", (req, res) => {
-  console.log("/api/notes/:iddelete");
-  deleteNoteFromJSON(red.params.id);
-  res.json(getJSON());
-});
-function getJSON(){
-  let data = fs.readFileSync(__dirname + "/d/db.json");
-  let json = JSON.parse(data);
-  return json;
-}
+//Finds the object that matches the id, use ES6 array.filter to return only non matching objects
+notetaker.delete(noteURL+"/:id", function (req, res) {
+  
+  //Read the existing array
+     fs.readFile("./db/db.json", (err, data) => { 
+       if (err)  throw err ; 
+       let dbJSON = JSON.parse(data)
+       
+       //Filter off object with matching id and return the new array
+       let returnedDBJSON = dbJSON.filter((existingJSONDB)=> {return existingJSONDB.id !== req.params.id})  
+       //Write back filtered object to the DB
+       fs.writeFile("./db/db.json", JSON.stringify(returnedDBJSON, null, 1), (err) => {
+         if (err)  throw err ; 
+         res.send(returnedDBJSON);         
+         console.log("\nSUCCESSFULLY DELETED....\n")          
+             }) 
+     }) 
+   }) 
+ 
+  
+
+
+
 
 notetaker.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"));
