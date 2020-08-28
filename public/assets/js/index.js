@@ -6,7 +6,7 @@ const $newNoteBtn = $(".new-note");
 const $noteList = $(".list-container .list-group");
 
 //hardcode URL for AJAX post and get
-const noteURL = "/api/notes"
+const noteURL = "/api/notes/"
 
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
