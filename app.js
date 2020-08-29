@@ -17,7 +17,7 @@ const database = require("./db/db.json")
 // Sets up the Express App
 // =============================================================
 const notetaker = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 
 // Sets up the Express notetaker to handle data parsing
 notetaker.use(express.urlencoded({ extended: true }));
@@ -81,11 +81,7 @@ notetaker.delete(noteURL+"/:id", function (req, res) {
      }) 
    }) 
  
-  
-
-
-
-
+ 
 notetaker.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
